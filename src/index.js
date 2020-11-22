@@ -1,42 +1,159 @@
 // Import Application class that is the main part of our PIXI project
-import { Application } from '@pixi/app'
+import * as PIXI from 'pixi.js'
 
-// In order that PIXI could render things we need to register appropriate plugins
-import { Renderer } from '@pixi/core' // Renderer is the class that is going to register plugins
+export class Game extends PIXI.Application {
+	constructor() {
+		this.width = 800;
+		this.height = 800;
+		super({
+			backgroundColor: antiquewhite,
+			width: this.width,
+			height: this.height,
 
-import { BatchRenderer } from '@pixi/core' // BatchRenderer is the "plugin" for drawing sprites
-Renderer.registerPlugin('batch', BatchRenderer)
+		})
 
-import { TickerPlugin } from '@pixi/ticker' // TickerPlugin is the plugin for running an update loop (it's for the application class)
-Application.registerPlugin(TickerPlugin)
+		console.warn(this.height);
 
-// And just for convenience let's register Loader plugin in order to use it right from Application instance like app.loader.add(..) etc.
-import { AppLoaderPlugin } from '@pixi/loaders'
-Application.registerPlugin(AppLoaderPlugin)
+		document.body.appendChild(this.view)
+		this.loadAssets()
+	}
+	loadAssets() {
+		// console.warn('hasar');
+		this.loader.add('basketball', './assets/basketball.png')
+		this.loader.add('btn1', './assets/btn1.png')
+		this.loader.add('btn2', './assets/btn2.png')
+		console.log(this.loader);
+		this.loader.load(() => {
+			this.createElement();
+		})
+	}
+	createElement() {
+		this.spriteBasketball = PIXI.Sprite.from('basketball')
+		this.btn1 = PIXI.Sprite.from('bt1')
+		this.btn2 = PIXI.Sprite.from('btn2')
+		this.spriteBasketball.x = this.width / 2
+		this.btn1.position.x = this.width / 2
+		this.btn2.position.x = this.width / 2
+		//this.btn2.y = this.height - this.btn2.style.height
+		//this.btn1.y = this.btn1.style.height
+		this.spriteBasketball.y = this.height / 2
+		this.stage.addChild(this.spriteBasketball)
+		this.stage.addChild(this.btn1)
+		this.stage.addChild(this.btn2)
 
-// Sprite is our image on the stage
-import { Sprite } from '@pixi/sprite'
 
-// App with width and height of the page
-const app = new Application({
-	width: window.innerWidth,
-	height: window.innerHeight
-})
-document.body.appendChild(app.view) // Create Canvas tag in the body
+	}
+}
 
-// Load the logo
-app.loader.add('logo', './assets/logo.png')
-app.loader.load(() => {
-	const sprite = Sprite.from('logo')
-	sprite.anchor.set(0.5) // We want to rotate our sprite relative to the center, so 0.5
-	app.stage.addChild(sprite)
 
-	// Position the sprite at the center of the stage
-	sprite.x = app.screen.width * 0.5
-	sprite.y = app.screen.height * 0.5
 
-	// Put the rotating function into the update loop
-	app.ticker.add(delta => {
-		sprite.rotation += 0.02 * delta
-	})
-})
+new Game();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Load the logo
+// app.loader.add('Basketball', './assets/basketball.png')
+// app.loader.add('logo', './assets/logo.png')
+// app.loader.load(() => {
+// 	const spriteLogo = PIXI.Sprite.from('logo');
+// 	const spriteBasketball = PIXI.Sprite.from('Basketball');
+
+
+// 	spriteLogo.anchor.set(0.5) // We want to rotate our spriteLogo relative to the center, so 0.5
+// 	//app.stage.addChild(spriteLogo)
+// 	app.stage.addChild(spriteBasketball)
+
+
+// 	// Position the spriteLogo at the center of the stage
+// 	spriteLogo.x = app.screen.width * 0.5
+// 	spriteLogo.y = app.screen.height * 0.5
+
+// 	// Put the rotating function into the update loop
+// 	app.ticker.add(delta => {
+// 		spriteLogo.rotation += 0.005 * delta
+// 	})
+// })
