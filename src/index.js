@@ -15,7 +15,7 @@ export class Game extends PIXI.Application {
 		this.height = 800;
 		document.body.appendChild(this.view)
 		this.ticker = PIXI.Ticker.shared;
-		this.angl = Math.PI
+		this.angl = Math.PI / 3
 		this.loadAssets()
 	}
 
@@ -71,24 +71,41 @@ export class Game extends PIXI.Application {
 	}
 
 	testPosition(ballX, ballY, ballMoveAngl) {
-		const ball = this.ball;
-		const maxWidth = this.width
-		const btn1 = this.btn1
-		const btn2 = this.btn2
-		const maxHeight = this.height
-
-		if ((ballY <= btn1.height) && (btn1.x > ball.x > btn1.x + btn1.width)) {
-			this.angl = Math.PI / 2 - ballMoveAngl;
+		let ball = this.ball;
+		let btn2 = this.btn2
+		let maxHeight = this.height
+		let maxWidth = this.width
+		if ((ballY <= this.btn1.height + this.btn1.y) &&
+			(this.btn1.x < ball.x) &&
+			(ball.x < this.btn1.x + this.btn1.width)) {
+			this.angl = - ballMoveAngl;
 		}
-		if ((ballY >= btn2.y) && (btn2.x > ball.x > btn2.x + btn2.width)) {
-			this.angl = Math.PI / 2 - ballMoveAngl;
+		if ((ballY >= btn2.y - ball.width / 2 - 5) &&
+			(btn2.x < ball.x < btn2.x + btn2.width)) {
+			this.angl = - ballMoveAngl;
 		}
-		if (ballX > maxWidth) {
-			this.angl = -ballMoveAngl;
+		if (ballX > maxWidth - ball.width / 2 - 10) {
+			this.angl = Math.PI - ballMoveAngl;
 		}
 		if (ballX < ball.width / 2 - 10) {
-			this.angl = -ballMoveAngl;
+			this.angl = Math.PI - ballMoveAngl;
 		}
+		if ((ballY >= btn2.y - ball.width / 2 - 5) &&
+			((btn2.x > ball.x) ||
+				(ball.x > btn2.x + btn2.width))) {
+			//console.log("ekav 1" + ballY + "btn2" + btn2.x);
+			this.ticker.stop()
+		}
+		if ((ballY < this.btn1.y - this.ball.height) &&
+			((this.btn1.x > ballX + this.ball.width) ||
+				(ball.x > btn2.x + btn2.width))) {
+			console.warn("ekav 1");
+			this.ticker.stop()
+		}
+		ball = null;
+		btn2 = null;
+		maxHeight = null;
+		maxWidth = null;
 	}
 }
 
