@@ -79,23 +79,15 @@ export class Game extends PIXI.Application {
 
 		if ((ballY <= btn1.height) && (btn1.x > ball.x > btn1.x + btn1.width)) {
 			this.angl = Math.PI / 2 - ballMoveAngl;
-			this.ballMoveAnim()
-			console.warn('1');
 		}
 		if ((ballY >= btn2.y) && (btn2.x > ball.x > btn2.x + btn2.width)) {
 			this.angl = Math.PI / 2 - ballMoveAngl;
-			this.ballMoveAnim()
-			console.warn('2');
 		}
 		if (ballX > maxWidth) {
 			this.angl = -ballMoveAngl;
-			this.ballMoveAnim()
-			console.warn('3');
 		}
 		if (ballX < ball.width / 2 - 10) {
 			this.angl = -ballMoveAngl;
-			this.ballMoveAnim()
-			console.warn('4');
 		}
 	}
 }
