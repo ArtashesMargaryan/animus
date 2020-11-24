@@ -15,15 +15,16 @@ export class Game extends PIXI.Application {
 		this.height = 800;
 		document.body.appendChild(this.view)
 		this.ticker = PIXI.Ticker.shared;
-		this.angl = Math.PI / 3
+		this.angl = -Math.PI / 4
 		this.loadAssets()
 	}
 
 	loadAssets() {
 		// console.warn('hasar');
-		this.loader.add('ball', './assets/basketball.png')
-		this.loader.add('btn1', './assets/btn1.png')
-		this.loader.add('btn2', './assets/btn2.png')
+		this.loader
+			.add('ball', './assets/basketball.png')
+			.add('btn1', './assets/btn1.png')
+			.add('btn2', './assets/btn2.png')
 		this.loader.load(() => {
 			this.createBall()
 			this.createPlatforns()
@@ -44,10 +45,15 @@ export class Game extends PIXI.Application {
 	}
 
 	createBall() {
+		this.constStep = 5
 		const ball = PIXI.Sprite.from('ball')
 		ball.x = this.width / 2 - ball.width
 		ball.y = this.height / 2
+		ball.anchor.set(0)
 		this.stage.addChild((this.ball = ball))
+		this.ticker.add(delta => {
+			ball.rotation += 0.02 * delta
+		})
 		// 	console.warn(this.ball.getBounds());
 	}
 
@@ -55,57 +61,58 @@ export class Game extends PIXI.Application {
 		this.view.addEventListener('mousemove', e => {
 			this.btn1.x = e.clientX  //up
 			this.btn2.x = e.clientX  //down
+
 		})
 	}
 
 	ballMoveAnim() {
 		this.ticker.add((time) => {
 			this.ballMove()
+
 		});
+
 	}
 
 	ballMove() {
-		this.ball.x += 5 * Math.cos(this.angl)
-		this.ball.y += 5 * Math.sin(this.angl)
+		this.ball.x += this.constStep * Math.cos(this.angl)
+		this.ball.y += this.constStep * Math.sin(this.angl)
 		this.testPosition(this.ball.x, this.ball.y, this.angl)
 	}
 
 	testPosition(ballX, ballY, ballMoveAngl) {
 		let ball = this.ball;
+		let ballCentrX = ball.width / 2;
+		let ballCentrY = ball.height / 2;
+		let btn1 = this.btn1
 		let btn2 = this.btn2
 		let maxHeight = this.height
 		let maxWidth = this.width
-		if ((ballY <= this.btn1.height + this.btn1.y) &&
-			(this.btn1.x < ball.x) &&
-			(ball.x < this.btn1.x + this.btn1.width)) {
-			this.angl = - ballMoveAngl;
+		// this.ball.x = 2;
+		// this.ticker.stop()
+		if (ball.x > maxWidth - ball.width) {
+			this.angl = Math.PI - this.angl;
 		}
-		if ((ballY >= btn2.y - ball.width / 2 - 5) &&
-			(btn2.x < ball.x < btn2.x + btn2.width)) {
-			this.angl = - ballMoveAngl;
+		if (ball.x < 1 * ball.width) {
+			this.angl = Math.PI - this.angl;
 		}
-		if (ballX > maxWidth - ball.width / 2 - 10) {
-			this.angl = Math.PI - ballMoveAngl;
+		if ((ball.y + ball.height >= btn2.y + 10) &&
+			((ball.x > btn2.x) && (ball.x < btn2.x + btn2.width))) {
+
+			this.angl = - this.angl;
 		}
-		if (ballX < ball.width / 2 - 10) {
-			this.angl = Math.PI - ballMoveAngl;
+		if ((ball.y < btn1.y + btn1.height + 10) &&
+			((ball.x > btn1.x) && (ball.x < btn1.x + btn1.width))) {
+
+			this.angl = - this.angl;
 		}
-		if ((ballY >= btn2.y - ball.width / 2 - 5) &&
-			((btn2.x > ball.x) ||
-				(ball.x > btn2.x + btn2.width))) {
-			//console.log("ekav 1" + ballY + "btn2" + btn2.x);
-			this.ticker.stop()
+		if (((ball.y < btn1.y + btn1.height - 5) ||
+			(ball.y + ball.height > btn2.y + 20)) &&
+			((ball.x < btn1.x) || (ball.x > btn1.x + btn1.width))) {
+			console.warn(3);
+			this.angl = - this.angl;
+			this.ticker.stop();
+			alert("GAME OVER")
 		}
-		if ((ballY < this.btn1.y - this.ball.height) &&
-			((this.btn1.x > ballX + this.ball.width) ||
-				(ball.x > btn2.x + btn2.width))) {
-			console.warn("ekav 1");
-			this.ticker.stop()
-		}
-		ball = null;
-		btn2 = null;
-		maxHeight = null;
-		maxWidth = null;
 	}
 }
 
